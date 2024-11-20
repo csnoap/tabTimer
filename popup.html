@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tab Wrangler Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    label {
+      margin-right: 10px;
+    }
+    .tab-info {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tab Wrangler Settings</h1>
+  <label for="inactivityTime">Inactivity Time (minutes):</label>
+  <input id="inactivityTime" type="number" min="1" />
+  <button id="saveSettings">Save</button>
+
+  <h2>Active Tabs:</h2>
+  <div id="tabsInfo"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
