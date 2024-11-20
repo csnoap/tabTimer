@@ -1,5 +1,6 @@
 let INACTIVITY_TIME = 1 * 60 * 1000; // Default: 1 minute
 let tabsActivity = {};
+let activeTabId = null; // Track the active tab ID
 let intervalId = null;
 
 // Load inactivity time from storage
@@ -14,14 +15,16 @@ chrome.storage.sync.get(['inactivityTime'], (result) => {
 // Update tab activity when activated
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   console.log(`Tab activated: ${tabId}`);
-  tabsActivity[tabId] = Date.now();
+  activeTabId = tabId;
+  tabsActivity[tabId] = Date.now(); // Reset timer for active tab
 });
 
 // Update tab activity when updated
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.active) {
     console.log(`Tab updated: ${tabId}`);
-    tabsActivity[tabId] = Date.now();
+    activeTabId = tabId;
+    tabsActivity[tabId] = Date.now(); // Reset timer for active tab
   }
 });
 
@@ -45,6 +48,10 @@ function startCheckingInactivity() {
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {
         if (
+          tab.id === activeTabId // If the tab is active, reset the timer
+        ) {
+          tabsActivity[tab.id] = Date.now(); // Reset activity time for active tab
+        } else if (
           !tab.active && // Tab is not active
           tabsActivity[tab.id] && // There is a recorded timestamp
           now - tabsActivity[tab.id] > INACTIVITY_TIME && // Exceeds inactivity threshold
@@ -59,7 +66,7 @@ function startCheckingInactivity() {
         }
       });
     });
-  }, 1 * 1000); // Run every second
+  }, 1000); // Run every second
 }
 
 // Function to restart the interval when settings change

@@ -48,35 +48,43 @@ function displayTabsInfo(tabsActivity, INACTIVITY_TIME) {
   const now = Date.now();
   for (const [tabId, lastActivity] of Object.entries(tabsActivity)) {
     chrome.tabs.get(parseInt(tabId), (tab) => {
-      if (tab) {
-        // Check if tab is "locked" (pinned, in group, or playing audio)
-        const isLocked = tab.pinned || tab.groupId !== -1 || tab.audible;
-        const shortenedUrl = tab.url.length > 20 ? `${tab.url.slice(0, 20)}...` : tab.url; // Shorten URL to 20 characters
-
-        let tabRow = document.createElement('div');
-        
-        if (isLocked) {
-          // Display 'Locked' for protected tabs
-          tabRow.innerHTML = `${shortenedUrl} - Locked`;
-        } else {
-          // Calculate remaining time for non-locked tabs
-          const remainingTime = INACTIVITY_TIME - (now - lastActivity);
-          const remainingSeconds = Math.max(Math.floor(remainingTime / 1000), 0); // Convert to seconds
-
-          // Format remaining time in hh:mm:ss
-          const hours = Math.floor(remainingSeconds / 3600);
-          const minutes = Math.floor((remainingSeconds % 3600) / 60);
-          const seconds = remainingSeconds % 60;
-          const timeFormatted = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-
-          tabRow.innerHTML = `${shortenedUrl} - ${timeFormatted} left`;
-        }
-
-        container.appendChild(tabRow);
+      // Handle the case where the tab doesn't exist anymore
+      if (chrome.runtime.lastError || !tab) {
+        console.error(`Tab with id ${tabId} no longer exists.`);
+        return; // Skip to the next tab
       }
+
+      // Check if tab is "locked" (pinned, in group, or playing audio)
+      const isLocked = tab.pinned || tab.groupId !== -1 || tab.audible;
+      const shortenedUrl = tab.url.length > 20 ? `${tab.url.slice(0, 20)}...` : tab.url; // Shorten URL to 20 characters
+
+      let tabRow = document.createElement('div');
+
+      if (tab.active) {
+        // Display 'Active Page' for the active tab
+        tabRow.innerHTML = `${shortenedUrl} - Active Page`;
+      } else if (isLocked) {
+        // Display 'Locked' for protected tabs
+        tabRow.innerHTML = `${shortenedUrl} - Locked`;
+      } else {
+        // Calculate remaining time for non-locked tabs
+        const remainingTime = INACTIVITY_TIME - (now - lastActivity);
+        const remainingSeconds = Math.max(Math.floor(remainingTime / 1000), 0); // Convert to seconds
+
+        // Format remaining time in hh:mm:ss
+        const hours = Math.floor(remainingSeconds / 3600);
+        const minutes = Math.floor((remainingSeconds % 3600) / 60);
+        const seconds = remainingSeconds % 60;
+        const timeFormatted = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+
+        tabRow.innerHTML = `${shortenedUrl} - ${timeFormatted} left`;
+      }
+
+      container.appendChild(tabRow);
     });
   }
 }
+
 
 // Helper function to pad numbers to 2 digits
 function padZero(num) {

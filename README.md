@@ -75,3 +75,7 @@ If you would like to contribute to this project, feel free to fork the repositor
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Pro Tips
+
+A tab will not be recorded if it is not clicked. For example, if you have existing tabs and then start the extension, you'll have to click on the existing tabs. New tabs should be recorded
