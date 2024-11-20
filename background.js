@@ -59,7 +59,7 @@ function startCheckingInactivity() {
         }
       });
     });
-  }, 1 * 1000); // Run every 10 seconds
+  }, 1 * 1000); // Run every second
 }
 
 // Function to restart the interval when settings change

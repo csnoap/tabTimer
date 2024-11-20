@@ -1,28 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tab Wrangler Settings</title>
+  <title>Tab Inactivity Tracker</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 10px;
+      width: 300px; /* Set the width of the popup */
+      margin: 0;
+      box-sizing: border-box;
     }
     label {
-      margin-right: 10px;
+      margin-right: 5px;
     }
-    .tab-info {
-      margin: 5px 0;
+    input[type="number"] {
+      width: 50px;
+    }
+    .settings {
+      margin-bottom: 20px;
+    }
+    #tabsInfo {
+      margin-top: 10px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>Tab Wrangler Settings</h1>
-  <label for="inactivityTime">Inactivity Time (minutes):</label>
-  <input id="inactivityTime" type="number" min="1" />
-  <button id="saveSettings">Save</button>
+  <h2>Tab Inactivity Tracker</h2>
 
-  <h2>Active Tabs:</h2>
-  <div id="tabsInfo"></div>
+  <div class="settings">
+    <div>
+      <label for="hours">Hours:</label>
+      <input type="number" id="hours" min="0" value="0">:
+    </div>
+    <div>
+      <label for="minutes">Minutes:</label>
+      <input type="number" id="minutes" min="0" max="59" value="1">:
+    </div>
+    <div>
+      <label for="seconds">Seconds:</label>
+      <input type="number" id="seconds" min="0" max="59" value="0">
+    </div>
+    <div>
+      <button id="saveSettings">Save Settings</button>
+    </div>
+  </div>
+
+  <div id="tabsInfo">
+    <!-- Tabs info will be dynamically populated here -->
+  </div>
 
   <script src="popup.js"></script>
 </body>
