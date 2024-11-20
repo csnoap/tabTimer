@@ -1,4 +1,4 @@
-# Tab Wrangler Chrome Extension
+# Tab Timer Chrome Extension
 
 This Chrome extension helps manage your open tabs by automatically closing inactive tabs after a user-defined period of inactivity. The extension allows you to specify the inactivity time (in minutes) and also excludes pinned tabs, tabs in groups, and tabs playing audio from being closed. It offers a real-time countdown for remaining time for non-locked tabs and displays "Locked" for tabs that are protected.
 
